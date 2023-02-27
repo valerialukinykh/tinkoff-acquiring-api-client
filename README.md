@@ -7,7 +7,24 @@
 
 PHP Клиент для интернет-эквайринга от Tinkoff
 
+это fork от основного пакета, добавлена поддержка версии 7.* GuzzleHttp
+
 ## Установка
+
+сначала заходим в файл composer.json и там добавляем репозиторий, либо целиком секицю
+
+```php
+"repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/dimawar/tinkoff-acquiring-api-client/"
+    }
+  ],
+```
+
+чтобы репозиторий брался из моего форка, а не из главного пакета
+
+затем устанавливаем пакет командой:
 
 `composer require justcommunication-ru/tinkoff-acquiring-api-client`
 
