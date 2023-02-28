@@ -28,6 +28,13 @@ class GetStateResponse extends AbstractResponse
      * @var int
      */
     protected $PaymentId;
+    
+    /**
+     * Сумма платежа в системе банка в копейках
+     *
+     * @var int
+     */
+    protected $Amount;
 
     /**
      * @return string
@@ -82,6 +89,24 @@ class GetStateResponse extends AbstractResponse
         $this->PaymentId = $PaymentId;
         return $this;
     }
+    
+    /**
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->Amount;
+    }
+
+    /**
+     * @param int $Amount
+     * @return $this
+     */
+    public function setAmount($Amount)
+    {
+        $this->Amount = $Amount;
+        return $this;
+    }
 
     /**
      * @inheritDoc
@@ -93,6 +118,7 @@ class GetStateResponse extends AbstractResponse
             ->setOrderId($data['OrderId'])
             ->setStatus($data['Status'])
             ->setPaymentId($data['PaymentId'])
+            ->setAmount($data['Amount'])
         ;
 
         return $response;
