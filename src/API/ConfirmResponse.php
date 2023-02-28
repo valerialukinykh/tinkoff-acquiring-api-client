@@ -30,6 +30,13 @@ class ConfirmResponse extends AbstractResponse
     protected $PaymentId;
 
     /**
+     * чистые данные в массиве (ответ от банка)
+     *
+     * @var array
+     */
+    protected $Data;
+
+    /**
      * @return string
      */
     public function getOrderId()
@@ -84,6 +91,24 @@ class ConfirmResponse extends AbstractResponse
     }
 
     /**
+     * @return array
+     */
+    public function getData()
+    {
+      return $this->Data;
+    }
+
+    /**
+     * @param array $Data
+     * @return $this
+     */
+    public function setData($Data)
+    {
+      $this->Data = $Data;
+      return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public static function createFromResponseData(array $data)
@@ -93,6 +118,7 @@ class ConfirmResponse extends AbstractResponse
             ->setOrderId($data['OrderId'])
             ->setStatus($data['Status'])
             ->setPaymentId($data['PaymentId'])
+            ->setData($data)
         ;
 
         return $response;

@@ -40,6 +40,13 @@ class CancelResponse extends AbstractResponse
     protected $NewAmount;
 
     /**
+     * чистые данные в массиве (ответ от банка)
+     *
+     * @var array
+     */
+    protected $Data;
+
+    /**
      * @return string
      */
     public function getOrderId()
@@ -130,6 +137,24 @@ class CancelResponse extends AbstractResponse
     }
 
     /**
+     * @return array
+     */
+    public function getData()
+    {
+      return $this->Data;
+    }
+
+    /**
+     * @param array $Data
+     * @return $this
+     */
+    public function setData($Data)
+    {
+      $this->Data = $Data;
+      return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public static function createFromResponseData(array $data)
@@ -141,6 +166,7 @@ class CancelResponse extends AbstractResponse
             ->setPaymentId($data['PaymentId'])
             ->setOriginalAmount($data['OriginalAmount'])
             ->setNewAmount($data['NewAmount'])
+            ->setData($data)
         ;
 
         return $response;

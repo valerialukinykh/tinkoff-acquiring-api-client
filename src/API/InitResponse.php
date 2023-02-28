@@ -44,6 +44,13 @@ class InitResponse extends AbstractResponse
     protected $PaymentURL;
 
     /**
+     * чистые данные в массиве (ответ от банка)
+     *
+     * @var array
+     */
+    protected $Data;
+
+    /**
      * @return int
      */
     public function getAmount()
@@ -134,6 +141,24 @@ class InitResponse extends AbstractResponse
     }
 
     /**
+     * @return array
+     */
+    public function getData()
+    {
+      return $this->Data;
+    }
+
+    /**
+     * @param array $Data
+     * @return $this
+     */
+    public function setData($Data)
+    {
+      $this->Data = $Data;
+      return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public static function createFromResponseData(array $data)
@@ -145,6 +170,7 @@ class InitResponse extends AbstractResponse
             ->setStatus($data['Status'])
             ->setPaymentId($data['PaymentId'])
             ->setPaymentURL($data['PaymentURL'])
+            ->setData($data)
         ;
 
         return $response;
