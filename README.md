@@ -73,7 +73,7 @@ $initRequest
     ->setNotificationURL('https://domain.tld/_api/notifications/124')
     ->setSuccessURL('https://domain.tld/_api/success/124')
     ->setFailURL('https://domain.tld/_api/fail/124')
-    ->setPayType($request::PAY_TYPE_ONE_STAGE)
+    ->setPayType($initRequest::PAY_TYPE_ONE_STAGE)
     ->setData([
         'Foo' => 'bar'
     ])
