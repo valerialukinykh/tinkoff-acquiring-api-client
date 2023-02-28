@@ -107,6 +107,14 @@ class InitRequest extends AbstractRequest
     protected $PayType;
 
     /**
+     * https://www.tinkoff.ru/kassa/develop/api/receipt/ffd12/
+     * Данные для чека
+     *
+     * @var array
+     */
+    protected $Reciept = [];
+
+    /**
      * Дополнительные параметры платежа в формате "ключ":"значение" (не более 20 пар).
      * Наименование самого параметра должно быть в верхнем регистре, иначе его содержимое будет игнорироваться.
      *
@@ -392,6 +400,24 @@ class InitRequest extends AbstractRequest
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getReciept()
+    {
+      return $this->Reciept;
+    }
+
+    /**
+     * @param array $Reciept
+     * @return InitRequest
+     */
+    public function setReciept(array $Reciept)
+    {
+      $this->Reciept = $Reciept;
+      return $this;
+    }
+
     public function createHttpClientParams()
     {
         $params = [
@@ -441,6 +467,10 @@ class InitRequest extends AbstractRequest
 
         if ($this->data) {
             $params['DATA'] = $this->data;
+        }
+
+        if (sizeof($this->Reciept)) {
+          $params['Reciept'] = $this->Reciept;
         }
 
         return [
