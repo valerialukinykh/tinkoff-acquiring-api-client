@@ -112,7 +112,7 @@ class InitRequest extends AbstractRequest
      *
      * @var array
      */
-    protected $Reciept = [];
+    protected $Receipt = [];
 
     /**
      * Дополнительные параметры платежа в формате "ключ":"значение" (не более 20 пар).
@@ -403,18 +403,18 @@ class InitRequest extends AbstractRequest
     /**
      * @return array
      */
-    public function getReciept()
+    public function getReceipt()
     {
-      return $this->Reciept;
+      return $this->Receipt;
     }
 
     /**
-     * @param array $Reciept
+     * @param array $Receipt
      * @return InitRequest
      */
-    public function setReciept(array $Reciept)
+    public function setReceipt(array $Receipt)
     {
-      $this->Reciept = $Reciept;
+      $this->Receipt = $Receipt;
       return $this;
     }
 
@@ -469,8 +469,8 @@ class InitRequest extends AbstractRequest
             $params['DATA'] = $this->data;
         }
 
-        if (sizeof($this->Reciept)) {
-          $params['Reciept'] = $this->Reciept;
+        if (sizeof($this->Receipt)) {
+          $params['Receipt'] = $this->Receipt;
         }
 
         return [
