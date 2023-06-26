@@ -1,46 +1,67 @@
 <?php
-use JustCommunication\TinkoffAcquiringAPIClient\TinkoffAcquiringAPIClient;
 
-class TinkoffAcquiringAPIClientTest extends PHPUnit_Framework_TestCase
+use GuzzleHttp\Client;
+use JustCommunication\TinkoffAcquiringAPIClient\API\GetStateRequest;
+use JustCommunication\TinkoffAcquiringAPIClient\TinkoffAcquiringAPIClient;
+use PHPUnit\Framework\TestCase;
+
+class TinkoffAcquiringAPIClientTest extends TestCase
 {
     public function testCallUndefinedMethod()
     {
-        $client = new TinkoffAcquiringAPIClient('token', 'secret');
+        $options = [
+            'terminalKey' => 'token'
+        ];
+        $client = new TinkoffAcquiringAPIClient($options);
 
         $this->expectException(BadMethodCallException::class);
-        $client->callSomeUndefinedRequest(new \JustCommunication\TinkoffAcquiringAPIClient\API\GetStateRequest(123));
+        $client->callSomeUndefinedRequest(new GetStateRequest(123));
     }
 
     public function testCreateHttpClientWithDefault()
     {
-        $client = new TinkoffAcquiringAPIClient('token', 'secret');
+        $options = [
+            'terminalKey' => 'token'
+        ];
+        $client = new TinkoffAcquiringAPIClient($options);
 
         $this->assertEquals(10, $client->getHttpClient()->getConfig('timeout'));
     }
 
     public function testCreateHttpClientWithArray()
     {
-        $client = new TinkoffAcquiringAPIClient('token', 'secret', [
-            'timeout' => 20
-        ]);
+        $options = [
+            'terminalKey' => 'token',
+            'httpClient' => [
+                'timeout' => 20
+            ]
+        ];
+        $client = new TinkoffAcquiringAPIClient($options);
 
         $this->assertEquals(20, $client->getHttpClient()->getConfig('timeout'));
     }
 
     public function testCreateHttpClientWithCustomHttpClient()
     {
-        $httpClient = new \GuzzleHttp\Client([
+        $httpClient = new Client([
             'timeout' => 15
         ]);
+        $options = [
+            'terminalKey' => 'token',
+            'httpClient' => $httpClient
+        ];
 
-        $client = new TinkoffAcquiringAPIClient('token', 'secret', $httpClient);
+        $client = new TinkoffAcquiringAPIClient($options);
         $this->assertEquals(15, $client->getHttpClient()->getConfig('timeout'));
 
-        $httpClient = new \GuzzleHttp\Client([
+        $httpClient = new Client([
             'timeout' => 25
         ]);
+        $options = [
+            'terminalKey' => 'token'
+        ];
 
-        $client = new TinkoffAcquiringAPIClient('token', 'secret');
+        $client = new TinkoffAcquiringAPIClient($options);
         $this->assertEquals(10, $client->getHttpClient()->getConfig('timeout'));
 
         $client->setHttpClient($httpClient);

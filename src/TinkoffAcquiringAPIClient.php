@@ -23,6 +23,7 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     const API_ENDPOINT = 'https://securepay.tinkoff.ru/v2/';
+    const API_ENDPOINT_TEST = 'https://rest-api-test.tinkoff.ru/v2/';
 
     protected static $default_http_client_options = [
         'connect_timeout' => 4,
@@ -32,10 +33,15 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
     /**
      * @var string
      */
-    protected $terminal_key;
+    protected $base_url;
 
     /**
      * @var string
+     */
+    protected $terminal_key;
+
+    /**
+     * @var ?string
      */
     protected $secret;
 
@@ -48,16 +54,40 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
      * TinkoffAcquiringAPIClient constructor.
      *
      * @param string $terminal_key
-     * @param string $secret
+     * @param ?string $secret
      * @param Client|array|null $httpClientOrOptions
      */
-    public function __construct($terminal_key, $secret, $httpClientOrOptions = null)
+    public function __construct(array $options = [])
     {
-        $this->terminal_key = $terminal_key;
-        $this->secret = $secret;
+        $allowedOptions = [
+            'terminalKey',
+            'secret',
+            'baseUrl',
+            'httpClient',
+        ];
+
+        $unknownOptions = \array_diff(\array_keys($options), $allowedOptions);
+
+        if (!empty($unknownOptions)) {
+            throw new \InvalidArgumentException(
+                \sprintf(
+                    'Unknown option "%s". Allowed options: "%s".',
+                    \reset($unknownOptions),
+                    \implode('", "', $allowedOptions)
+                )
+            );
+        }
+
+        if (empty($options['terminalKey'])) {
+            throw new \InvalidArgumentException('You must provide authentication attribute "terminalKey".');
+        }
+
+        $this->terminal_key = $options['terminalKey'];
+        $this->secret = $options['secret'] ?? null;
+        $this->base_url = $options['baseUrl'] ?? self::API_ENDPOINT;
 
         $this->logger = new NullLogger();
-        $this->httpClient = self::createHttpClient($httpClientOrOptions);
+        $this->httpClient = self::createHttpClient($options['httpClient'] ?? null);
     }
 
     public function __call($name, array $arguments)
@@ -123,7 +153,7 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
         $params = $request->createHttpClientParams();
 
         if (!isset($params['base_uri'])) {
-            $params['base_uri'] = self::API_ENDPOINT;
+            $params['base_uri'] = $this->base_url;
         }
 
         if (!isset($params['json'])) {
@@ -144,7 +174,9 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
             }
         }
 
-        $params['Password'] = $this->secret;
+        if (!empty($this->secret)) {
+            $params['Password'] = $this->secret;
+        }
         ksort($params);
 
         $token = '';
