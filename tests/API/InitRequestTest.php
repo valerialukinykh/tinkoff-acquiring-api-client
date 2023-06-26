@@ -1,8 +1,9 @@
 <?php
 
 use JustCommunication\TinkoffAcquiringAPIClient\API\InitRequest;
+use PHPUnit\Framework\TestCase;
 
-class InitRequestTest extends PHPUnit_Framework_TestCase
+class InitRequestTest extends TestCase
 {
     public function testCreateWithMinimumParameters()
     {
