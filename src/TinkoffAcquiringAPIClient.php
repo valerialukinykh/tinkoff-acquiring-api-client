@@ -19,6 +19,7 @@ use Psr\Log\NullLogger;
  * @method API\CancelResponse sendCancelRequest(API\CancelRequest $request)
  *
  * @method API\GetQrResponse sendGetQrRequest(API\GetQrRequest $request)
+ * @method API\GetQrStateResponse sendGetQrStateRequest(API\GetQrStateRequest $request)
  */
 class TinkoffAcquiringAPIClient implements LoggerAwareInterface
 {
@@ -141,6 +142,12 @@ class TinkoffAcquiringAPIClient implements LoggerAwareInterface
                 $exception_message = $response_data['Message'];
                 if (isset($response_data['Details'])) {
                     $exception_message .= ': ' . $response_data['Details'];
+                }
+                if (isset($response_data['QrCancelCode'])) {
+                    $exception_message .= ' ' . $response_data['QrCancelCode'];
+                }
+                if (isset($response_data['QrCancelMessage'])) {
+                    $exception_message .= ': ' . $response_data['QrCancelMessage'];
                 }
 
                 throw new TinkoffAPIException($exception_message, $response_data['ErrorCode']);
